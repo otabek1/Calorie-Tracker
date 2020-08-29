@@ -17,13 +17,17 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.harrywhewell.scrolldatepicker.DayScrollDatePicker;
 import com.harrywhewell.scrolldatepicker.OnDateSelectedListener;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "ovqat";
     public static Resources resources;
     RecyclerView infoRecycler;
     long milliseconds;
+    ArrayList<HashMap<String, Object>> list = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +53,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDateSelected(@Nullable Date date) {
                 if (date != null) {
-                    milliseconds = date.getTime();
+                    list.clear();
+                    milliseconds = date.getDate();
                     Log.i(TAG, "onDateSelected: " + milliseconds);
 
                     SQLiteDatabase sqLiteDatabase = MainActivity.this.openOrCreateDatabase("Data", MODE_PRIVATE, null);
                     Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM calories WHERE date==" + milliseconds, null);
-                    int dateIndex = c.getColumnIndex("date");
+                    int amountIndex = c.getColumnIndex("amount");
                     int posIndex = c.getColumnIndex("pos");
 
                     if (c.moveToFirst()) {
                         while (!c.isAfterLast()) {
                             Log.i(TAG, c.getString(posIndex));
+                            HashMap<String, Object> data = new HashMap<>();
+                            data.put("amount", c.getInt(amountIndex));
                             c.moveToNext();
+                            list.add(data);
                         }
                     }
                     c.close();

@@ -69,7 +69,7 @@ public class AddMeal extends AppCompatActivity implements MealAdapter.OnMealList
             public void onClick(View v) {
 
                 Date date = new Date();
-                milliseconds = date.getTime();
+                milliseconds = date.getDate();
                 amount = Integer.parseInt(amountEdt.getText().toString());
                 SQLiteDatabase sqLiteDatabase = AddMeal.this.openOrCreateDatabase("Data", MODE_PRIVATE, null);
                 sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS calories (date INT, pos INT, amount INT)");
